@@ -1,26 +1,47 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import { Route } from "react-router-dom";
+import { Header } from "./components";
+import { Home, Cart } from "./pages";
+import axios from "axios";
+import { setPizzas } from "./redux/actions/pizzas";
+import { connect } from "react-redux";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends React.Component {
+	componentDidMount() {
+		axios.get("/db.json").then(({ data }) => {
+			window.store.dispatch(setPizzas(data.pizzas));
+		});
+	}
+
+	render() {
+		return (
+			<div className='wrapper'>
+				<Header />
+				<Route exact path={"/"} render={() => <Home items={this.props.items} />} />
+				<Route path={"/cart"} component={Cart} />
+			</div>
+		);
+	}
 }
 
-export default App;
+const mapStateToProps = (state) => {
+	return {
+		items: state.pizzas.items
+	};
+};
+
+const mapDispatchToProps = (dispatch) => {
+   return {
+      setPizzas: (items) => dispatch(setPizzas(items))
+   }
+}
+ 
+// если названия actionCreators и свойства объекта совпадают
+// то можно передать объект с этим значение а Redux сам обернет это в функцию,
+// а в последствии и в dispatch
+// const mapDispatchToProps = {
+// 	setPizzas
+// };
+
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);
