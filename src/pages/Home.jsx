@@ -1,38 +1,58 @@
-import React from "react";
-import { Categories, PizzaCard, Sort } from "../components";
-import PropTypes from "prop-types";
+import React, { useCallback, useEffect } from "react";
+import { Categories, PizzaBlock, Sort, PizzaLoadingBlock } from "../components";
+import { useSelector, useDispatch } from "react-redux";
+import { setCategory, setSortBy } from "../redux/actions/filters";
+import { fetchPizzas } from "../redux/actions/pizzas";
 
-function Home({ items }) {
+const categoryNames = ["Мясные", "Вегетерианские", "Гриль", "Острые", "Закрытые"];
+const sortItems = [
+	{ name: "популярности", type: "popular", order: "desc" },
+	{ name: "цене", type: "price", order: "desc" },
+	{ name: "алфавиту", type: "name", order: "asc"}
+];
+
+function Home() {
+	const dispatch = useDispatch();
+	const items = useSelector(({ pizzas }) => pizzas.items);
+	const isLoaded = useSelector(({ pizzas }) => pizzas.isLoaded);
+	const { category, sortBy } = useSelector(({ filters }) => filters);
+
+	useEffect(() => {
+		dispatch(fetchPizzas(sortBy, category));
+	}, [category, sortBy]); // eslint-disable-line react-hooks/exhaustive-deps
+
+	const onSelectCategory = useCallback((index) => {
+		dispatch(setCategory(index));
+	}, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+	const onClickSortType = useCallback((item) => {
+		dispatch(setSortBy(item));
+	}, []); // eslint-disable-line react-hooks/exhaustive-deps
+
 	return (
 		<div className='content'>
 			<div className='container'>
 				<div className='content__top'>
-					<Categories items={["Мясные", "Вегетерианские", "Гриль", "Острые", "Закрытые"]} />
-					<Sort
-						items={[
-							{ name: "популярности", type: "popular" },
-							{ name: "цене", type: "price" },
-							{ name: "алфавиту", type: "alphabet" }
-						]}
+					<Categories
+						activeCategory={category}
+						onClickCategory={onSelectCategory}
+						items={categoryNames}
 					/>
+					<Sort items={sortItems} activeSortType={sortBy.type} onClickSortType={onClickSortType} />
 				</div>
 				<h2 className='content__title'>Все пиццы</h2>
 				<div className='content__items'>
-					{items.map((item) => {
-						return <PizzaCard {...item} key={item.id} />;
-					})}
+					{isLoaded
+						? items.map((item) => {
+								return <PizzaBlock {...item} key={item.id} />;
+						  })
+						: Array(10)
+								.fill(0)
+								.map((i, index) => <PizzaLoadingBlock key={index} />)}
 				</div>
 			</div>
 		</div>
 	);
 }
-
-Home.propTypes = {
-	items: PropTypes.arrayOf(PropTypes.object)
-};
-
-Home.defaultProps = {
-	items: {}
-};
 
 export default Home;

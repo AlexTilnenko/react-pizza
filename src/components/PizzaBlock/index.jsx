@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import classNames from "classnames";
 import PropTypes from "prop-types";
 
-function PizzaCard({ imageUrl, name, types, sizes, price, category, rating }) {
+function PizzaBlock({ imageUrl, name, types, sizes, price, category, rating }) {
 	const availableNames = ["тонкое", "традиционное"];
 	const availableSizes = [26, 30, 40];
 	const [activeType, setActiveType] = useState(types[0]);
@@ -76,19 +76,19 @@ function PizzaCard({ imageUrl, name, types, sizes, price, category, rating }) {
 	);
 }
 
-PizzaCard.propTypes = {
+PizzaBlock.propTypes = {
 	name: PropTypes.string,
 	imageUrl: PropTypes.string,
 	types: PropTypes.arrayOf(PropTypes.number),
 	sizes: PropTypes.arrayOf(PropTypes.number),
-	price: PropTypes.number
+	price: PropTypes.number,
 };
 
-PizzaCard.defaultProps = {
+PizzaBlock.defaultProps = {
 	name: "Pizza",
 	types: [],
-   sizes: [],
-   proce: 0
+	sizes: [],
+	proce: 0,
 };
 
-export default PizzaCard;
+export default PizzaBlock;
