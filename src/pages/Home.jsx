@@ -3,6 +3,8 @@ import { Categories, PizzaBlock, Sort, PizzaLoadingBlock } from "../components";
 import { useSelector, useDispatch } from "react-redux";
 import { setCategory, setSortBy } from "../redux/actions/filters";
 import { fetchPizzas } from "../redux/actions/pizzas";
+import { addPizzaToCart } from "../redux/actions/cart";
+// import { addPizzaToCart } from "../redux/actions/cart";
 
 const categoryNames = ["Мясные", "Вегетерианские", "Гриль", "Острые", "Закрытые"];
 const sortItems = [
@@ -14,9 +16,9 @@ const sortItems = [
 function Home() {
 	const dispatch = useDispatch();
 	const items = useSelector(({ pizzas }) => pizzas.items);
+	const cartItems = useSelector(({ cart }) => cart.items);
 	const isLoaded = useSelector(({ pizzas }) => pizzas.isLoaded);
 	const { category, sortBy } = useSelector(({ filters }) => filters);
-
 	useEffect(() => {
 		dispatch(fetchPizzas(sortBy, category));
 	}, [category, sortBy]); // eslint-disable-line react-hooks/exhaustive-deps
@@ -29,6 +31,10 @@ function Home() {
 		dispatch(setSortBy(item));
 	}, []); // eslint-disable-line react-hooks/exhaustive-deps
 
+	const onСlickAddPizza = (obj) => {
+      dispatch(addPizzaToCart(obj))
+   }
+
 	return (
 		<div className='content'>
 			<div className='container'>
@@ -38,13 +44,24 @@ function Home() {
 						onClickCategory={onSelectCategory}
 						items={categoryNames}
 					/>
-					<Sort items={sortItems} activeSortType={sortBy.type} onClickSortType={onClickSortType} />
+					<Sort
+						items={sortItems}
+						activeSortType={sortBy.type}
+						onClickSortType={onClickSortType}
+					/>
 				</div>
 				<h2 className='content__title'>Все пиццы</h2>
 				<div className='content__items'>
 					{isLoaded
 						? items.map((item) => {
-								return <PizzaBlock {...item} key={item.id} />;
+								return (
+									<PizzaBlock
+										{...item}
+										key={item.id}
+										onClickAddPizza={onСlickAddPizza}
+										addedCount={cartItems[item.id] && cartItems[item.id].length}
+									/>
+								);
 						  })
 						: Array(10)
 								.fill(0)
