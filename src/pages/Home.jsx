@@ -10,7 +10,7 @@ const categoryNames = ["Мясные", "Вегетерианские", "Грил
 const sortItems = [
 	{ name: "популярности", type: "popular", order: "desc" },
 	{ name: "цене", type: "price", order: "desc" },
-	{ name: "алфавиту", type: "name", order: "asc"}
+	{ name: "алфавиту", type: "name", order: "asc" }
 ];
 
 function Home() {
@@ -32,8 +32,8 @@ function Home() {
 	}, []); // eslint-disable-line react-hooks/exhaustive-deps
 
 	const onСlickAddPizza = (obj) => {
-      dispatch(addPizzaToCart(obj))
-   }
+		dispatch(addPizzaToCart(obj));
+	};
 
 	return (
 		<div className='content'>
@@ -59,7 +59,10 @@ function Home() {
 										{...item}
 										key={item.id}
 										onClickAddPizza={onСlickAddPizza}
-										addedCount={cartItems[item.id] && cartItems[item.id].length}
+										addedCount={
+											cartItems[item.id] &&
+											cartItems[item.id].items.length
+										}
 									/>
 								);
 						  })
