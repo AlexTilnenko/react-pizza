@@ -1,24 +1,39 @@
-const initialState = {
+import * as t from '../actions/types'
+
+type ItemsType = {
+   [key: string]: {
+      items: Array<{}>
+      totalPrice: number
+   }
+}
+
+type CartStateType = {
+   items: ItemsType,
+   totalPrice: number,
+   totalCount: number,
+}
+
+const initialState: CartStateType = {
 	items: {},
 	totalPrice: 0,
 	totalCount: 0
 };
 
-const getAllPizzas = (newItems) => {
+const getAllPizzas = (newItems: object) => {
 	// Достаем из объекта newItems по ключу items массивы пицц
 	const itemsArr = Object.values(newItems).map((obj) => obj.items);
 	// объединяем все массивы в один
 	return [].concat.apply([], itemsArr);
 };
 
-const getTotalPrice = (arr) => arr.reduce((sum, obj) => obj.price + sum, 0);
+const getTotalPrice = (arr: any) => arr.reduce((sum: number, obj: {price: number}) => obj.price + sum, 0);
 
-const cartReducer = (state = initialState, action) => {
+const cartReducer = (state = initialState, action: t.CartActionTypes): CartStateType => {
 	switch (action.type) {
-		case "ADD_PIZZA_TO_CART":
+		case t.ADD_PIZZA_TO_CART:
 			// проверяем есть ли в items по ключу [id] объекты, если нету то возвращаем новый
 			// если есть то берем все старые объекты и добавляем новый объект
-			const currentPizzasItems = state.items[action.payload.id]
+			const currentPizzasItems: any = state.items[action.payload.id]
 				? [...state.items[action.payload.id].items, action.payload]
 				: [action.payload];
 
@@ -39,12 +54,12 @@ const cartReducer = (state = initialState, action) => {
 				totalPrice
 			};
 
-		case "REMOVE_CART_ITEM": {
+		case t.REMOVE_CART_ITEM: {
 			const newItems = {
 				...state.items
 			};
-			const currentTotalPrice = newItems[action.payload].totalPrice;
-			const currentTotalCount = newItems[action.payload].items.length;
+			const currentTotalPrice: number = newItems[action.payload].totalPrice;
+			const currentTotalCount: number = newItems[action.payload].items.length;
 			delete newItems[action.payload];
 
 			return {
@@ -55,10 +70,10 @@ const cartReducer = (state = initialState, action) => {
 			};
 		}
 
-		case "CLEAR_CART":
+		case t.CLEAR_CART:
 			return initialState;
 
-		case "PLUS_CART_ITEM": {
+		case t.PLUS_CART_ITEM: {
 			const newObjItems = [
 				...state.items[action.payload].items,
 				state.items[action.payload].items[0]
@@ -81,7 +96,7 @@ const cartReducer = (state = initialState, action) => {
 			};
 		}
 
-		case "MINUS_CART_ITEM": {
+		case t.MINUS_CART_ITEM: {
 			const oldObjItems = state.items[action.payload].items;
          const newObjItems = oldObjItems.length > 1 ? oldObjItems.slice(1) : oldObjItems;
          const newItems = {

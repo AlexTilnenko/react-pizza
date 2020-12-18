@@ -15,12 +15,11 @@ const sortItems = [
 
 function Home() {
 	const dispatch = useDispatch();
-	const items = useSelector(({ pizzas }) => pizzas.items);
+	const { items, isLoaded } = useSelector(({ pizzas }) => pizzas);
 	const cartItems = useSelector(({ cart }) => cart.items);
-	const isLoaded = useSelector(({ pizzas }) => pizzas.isLoaded);
 	const { category, sortBy } = useSelector(({ filters }) => filters);
 	useEffect(() => {
-		dispatch(fetchPizzas(sortBy, category));
+		dispatch(fetchPizzas({ ...sortBy, category }));
 	}, [category, sortBy]); // eslint-disable-line react-hooks/exhaustive-deps
 
 	const onSelectCategory = useCallback((index) => {
@@ -59,10 +58,7 @@ function Home() {
 										{...item}
 										key={item.id}
 										onClickAddPizza={onСlickAddPizza}
-										addedCount={
-											cartItems[item.id] &&
-											cartItems[item.id].items.length
-										}
+										addedCount={cartItems[item.id] && cartItems[item.id].items.length}
 									/>
 								);
 						  })

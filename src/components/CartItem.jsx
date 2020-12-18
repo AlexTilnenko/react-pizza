@@ -1,15 +1,24 @@
 import React from "react";
 
-function CartItem({id, name, size, type, totalCount, totalPrice, removeCartItem, onPlus, onMinus }) {
-   
-   const handleMinusItem = () => {
-      onMinus(id)
-   }
+function CartItem({
+	id,
+	name,
+	size,
+	type,
+	totalCount,
+	totalPrice,
+	removeCartItem,
+	onPlus,
+	onMinus
+}) {
+	const handleMinusItem = () => {
+		onMinus(id);
+	};
 
-   const handlePlusItem = () => {
+	const handlePlusItem = () => {
 		onPlus(id);
 	};
-   return (
+	return (
 		<div className='cart__item'>
 			<div className='cart__item-img'>
 				<img
