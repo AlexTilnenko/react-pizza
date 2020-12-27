@@ -1,5 +1,17 @@
 import React from "react";
 
+interface ICartItemProps {
+   id: number,
+	name: string,
+	size: number,
+	type: string,
+	totalCount: number,
+	totalPrice: number,
+	removeCartItem: (id: number) => void,
+	onPlus: (id: number) => void,
+	onMinus: (id: number) => void
+}
+
 function CartItem({
 	id,
 	name,
@@ -10,12 +22,12 @@ function CartItem({
 	removeCartItem,
 	onPlus,
 	onMinus
-}) {
-	const handleMinusItem = () => {
+}: ICartItemProps) {
+	const handleMinusItem = (): void => {
 		onMinus(id);
 	};
 
-	const handlePlusItem = () => {
+	const handlePlusItem = (): void => {
 		onPlus(id);
 	};
 	return (

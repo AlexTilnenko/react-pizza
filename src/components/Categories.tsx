@@ -1,6 +1,14 @@
 import React from "react";
+import { Category } from "../redux/reducers/filters";
 
-const Categories = React.memo(function Categories({ items, onClickCategory, activeCategory }) {
+
+interface ICategoriesProps {
+   items: Array<{}>
+   onClickCategory: (categoryIndex: number | null) => void
+   activeCategory: Category
+}
+
+const Categories: React.FC<ICategoriesProps> = React.memo(function Categories({ items, onClickCategory, activeCategory }) {
 	return (
 		<div className='categories'>
 			<ul>

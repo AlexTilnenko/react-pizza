@@ -1,36 +1,39 @@
 import React, { useCallback, useEffect } from "react";
-import { Categories, PizzaBlock, Sort, PizzaLoadingBlock } from "../components";
 import { useSelector, useDispatch } from "react-redux";
+import { Categories, PizzaBlock, Sort, PizzaLoadingBlock } from "../components";
 import { setCategory, setSortBy } from "../redux/actions/filters";
 import { fetchPizzas } from "../redux/actions/pizzas";
 import { addPizzaToCart } from "../redux/actions/cart";
-// import { addPizzaToCart } from "../redux/actions/cart";
+import { RootState } from "../redux/reducers";
+import { AddedPizza, SortBy } from "../redux/actions/types";
+// import { Category } from "../redux/reducers/filters";
 
-const categoryNames = ["Мясные", "Вегетерианские", "Гриль", "Острые", "Закрытые"];
-const sortItems = [
+export type SortItem = {name: string, type: string, order: string}
+const categoryNames: Array<string> = ["Мясные", "Вегетерианские", "Гриль", "Острые", "Закрытые"];
+const sortItems: Array<SortItem> = [
 	{ name: "популярности", type: "popular", order: "desc" },
 	{ name: "цене", type: "price", order: "desc" },
 	{ name: "алфавиту", type: "name", order: "asc" }
 ];
 
-function Home() {
+const Home: React.FC = () => {
 	const dispatch = useDispatch();
-	const { items, isLoaded } = useSelector(({ pizzas }) => pizzas);
-	const cartItems = useSelector(({ cart }) => cart.items);
-	const { category, sortBy } = useSelector(({ filters }) => filters);
+	const { items, isLoaded } = useSelector(({ pizzas }: RootState) => pizzas);
+	const cartItems = useSelector(({ cart }: RootState) => cart.items);
+	const { category, sortBy } = useSelector(({ filters }: RootState) => filters);
 	useEffect(() => {
 		dispatch(fetchPizzas({ ...sortBy, category }));
 	}, [category, sortBy]); // eslint-disable-line react-hooks/exhaustive-deps
 
-	const onSelectCategory = useCallback((index) => {
-		dispatch(setCategory(index));
-	}, []); // eslint-disable-line react-hooks/exhaustive-deps
+	const onSelectCategory = useCallback((categoryIndex: any): void => {
+		dispatch(setCategory(categoryIndex));
+	}, [category]); // eslint-disable-line react-hooks/exhaustive-deps
 
-	const onClickSortType = useCallback((item) => {
+	const onClickSortType = useCallback((item: SortBy): void => {
 		dispatch(setSortBy(item));
-	}, []); // eslint-disable-line react-hooks/exhaustive-deps
-
-	const onСlickAddPizza = (obj) => {
+	}, [sortBy]); // eslint-disable-line react-hooks/exhaustive-deps
+   
+	const onСlickAddPizza = (obj: AddedPizza) => {
 		dispatch(addPizzaToCart(obj));
 	};
 
@@ -52,13 +55,13 @@ function Home() {
 				<h2 className='content__title'>Все пиццы</h2>
 				<div className='content__items'>
 					{isLoaded
-						? items.map((item) => {
+						? items.map((item: any) => {
 								return (
 									<PizzaBlock
 										{...item}
 										key={item.id}
 										onClickAddPizza={onСlickAddPizza}
-										addedCount={cartItems[item.id] && cartItems[item.id].items.length}
+										addedCount={cartItems[item.id] ? cartItems[item.id].items.length : null}
 									/>
 								);
 						  })

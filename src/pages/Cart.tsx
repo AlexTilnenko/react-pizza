@@ -3,14 +3,16 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { CartItem } from "../components";
 import { clearCart, removeCartItem, plusItem, minusItem } from "../redux/actions/cart";
+import { RootState } from "../redux/reducers";
+import { AddedPizza } from "../redux/actions/types";
 
 import emptyCartImg from "../assets/img/empty-cart.png";
 
 function Cart() {
-	const dispatch = useDispatch();
+   const dispatch = useDispatch();  
 
-	const { totalPrice, totalCount, items } = useSelector(({ cart }) => cart);
-	const addedPizzas = Object.keys(items).map((key) => items[key].items[0]);
+	const { totalPrice, totalCount, items } = useSelector(({ cart }: RootState) => cart);
+   const addedPizzas: Array<AddedPizza> = Object.keys(items).map((key) => items[key].items[0]);
 
 	const onClearCart = () => {
 		if (window.confirm("Вы действительно хотите очистить корзину?")) {
@@ -18,17 +20,17 @@ function Cart() {
 		}
 	};
 
-	const onRemoveCartItem = (id) => {
+	const onRemoveCartItem = (id: number) => {
 		if (window.confirm("Вы действительно хотите удалить?")) {
 			dispatch(removeCartItem(id));
 		}
 	};
 
-	const onPlusItem = (id) => {
+	const onPlusItem = (id: number) => {
 		dispatch(plusItem(id));
 	};
 
-	const onMinusItem = (id) => {
+	const onMinusItem = (id: number) => {
 		dispatch(minusItem(id));
 	};
 
@@ -121,7 +123,6 @@ function Cart() {
 										name={item.name}
 										type={item.type}
 										size={item.size}
-										price={item[item.id]}
 										key={item.id}
 										removeCartItem={onRemoveCartItem}
 										onPlus={onPlusItem}
@@ -168,7 +169,7 @@ function Cart() {
 				) : (
 					<div className='cart cart--empty'>
 						<h2>
-							Корзина пустая{" "}
+							Корзина пустая
 							<span role='img' aria-label='Sad emoji'>
 								😕
 							</span>

@@ -29,16 +29,16 @@ type SetLoadingAction = {
    payload: boolean
 }
 
-export type PizzasActionTypes = SetPizzasAction | SetLoadingAction
+export type PizzasActions = SetPizzasAction | SetLoadingAction
 
-export type SortByActionPayloadType = {
+export type SortBy = {
       type: string,
       order: string
    }
 
 type SetSortByAction = {
    type: typeof SET_SORT_BY
-   payload: SortByActionPayloadType
+   payload: SortBy
 }
 
 type SetCategoryAction = {
@@ -46,9 +46,9 @@ type SetCategoryAction = {
    payload: number
 }
 
-export type FiltersActionTypes = SetSortByAction | SetCategoryAction
+export type FiltersActions = SetSortByAction | SetCategoryAction
 
-export type PizzaObjectType = {
+export type AddedPizza = {
    id: number,
    name: string,
    imageUrl: string,
@@ -59,7 +59,7 @@ export type PizzaObjectType = {
 
 type AddPizzaToCartAction = {
    type: typeof ADD_PIZZA_TO_CART
-   payload: PizzaObjectType
+   payload: AddedPizza
 }
 
 type ClearCartAction = {
@@ -82,5 +82,5 @@ type MinusCartItemAction = {
    payload: number
 }
 
-export type CartActionTypes = AddPizzaToCartAction | ClearCartAction | RemoveCartItemAction | PlusCartItemAction | MinusCartItemAction
+export type CartActions = AddPizzaToCartAction | ClearCartAction | RemoveCartItemAction | PlusCartItemAction | MinusCartItemAction
 

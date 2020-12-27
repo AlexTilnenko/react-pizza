@@ -2,7 +2,7 @@ import * as t from '../actions/types'
 
 type ItemsType = {
    [key: string]: {
-      items: Array<{}>
+      items: Array<t.AddedPizza>
       totalPrice: number
    }
 }
@@ -28,12 +28,12 @@ const getAllPizzas = (newItems: object) => {
 
 const getTotalPrice = (arr: any) => arr.reduce((sum: number, obj: {price: number}) => obj.price + sum, 0);
 
-const cartReducer = (state = initialState, action: t.CartActionTypes): CartStateType => {
+const cartReducer = (state = initialState, action: t.CartActions): CartStateType => {
 	switch (action.type) {
 		case t.ADD_PIZZA_TO_CART:
 			// проверяем есть ли в items по ключу [id] объекты, если нету то возвращаем новый
 			// если есть то берем все старые объекты и добавляем новый объект
-			const currentPizzasItems: any = state.items[action.payload.id]
+			const currentPizzasItems = state.items[action.payload.id]
 				? [...state.items[action.payload.id].items, action.payload]
 				: [action.payload];
 
@@ -58,8 +58,8 @@ const cartReducer = (state = initialState, action: t.CartActionTypes): CartState
 			const newItems = {
 				...state.items
 			};
-			const currentTotalPrice: number = newItems[action.payload].totalPrice;
-			const currentTotalCount: number = newItems[action.payload].items.length;
+			const currentTotalPrice = newItems[action.payload].totalPrice;
+			const currentTotalCount = newItems[action.payload].items.length;
 			delete newItems[action.payload];
 
 			return {

@@ -1,11 +1,11 @@
-import {SortByActionPayloadType, FiltersActionTypes, SET_SORT_BY, SET_CATEGORY} from './types'
+import * as t from './types'
 
-export const setSortBy = ({ type, order }: SortByActionPayloadType): FiltersActionTypes => ({
-	type: SET_SORT_BY,
+export const setSortBy = ({ type, order }: t.SortBy): t.FiltersActions => ({
+	type: t.SET_SORT_BY,
 	payload: { type, order }
 });
 
-export const setCategory = (catIndex: number): FiltersActionTypes => ({
-	type: SET_CATEGORY,
+export const setCategory = (catIndex: number): t.FiltersActions => ({
+	type: t.SET_CATEGORY,
 	payload: catIndex
 });

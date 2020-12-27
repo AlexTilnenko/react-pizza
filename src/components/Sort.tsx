@@ -1,27 +1,36 @@
 import React, { useState, useEffect, useRef } from "react";
-import PropTypes, { object } from 'prop-types'
+import { SortItem } from "../pages/Home";
+import { SortBy } from "../redux/actions/types";
 
-const Sort = React.memo(function Sort({ items, activeSortType, onClickSortType }) {
-	const [visiblePopup, setVisiblePopup] = useState(false);
-   const sortRef = useRef();
-	let activeLabel = items.find(obj => obj.type === activeSortType).name;
+interface ISortProps {
+   items: Array<SortItem>
+   onClickSortType: (item: SortBy) => void
+   activeSortType: string
+}
+
+
+const Sort: React.FC<ISortProps> = React.memo(function Sort({ items, activeSortType, onClickSortType }) {
+	const [visiblePopup, setVisiblePopup] = useState<boolean>(false);
+   const sortRef = useRef<HTMLDivElement>(null);
+	let activeLabel: string = items.find(obj => obj.type === activeSortType)!.name;
 
 	useEffect(() => {
-		document.body.addEventListener("click", outsideClickHandle);
+      document.body.addEventListener("click", outsideClickHandle);
+      return () => document.body.removeEventListener("click", outsideClickHandle);
 	}, []);
 
-	const outsideClickHandle = (event) => {
-      const path = event.path || (event.composedPath && event.composedPath());
+	const outsideClickHandle = (e: any): void => {
+      const path = e.path || (e.composedPath && e.composedPath());
 		if (!path.includes(sortRef.current)) {
 			setVisiblePopup(false);
 		}
 	};
 
-	const toggleVisiblePopup = () => {
+	const toggleVisiblePopup = (): void => {
 		setVisiblePopup(!visiblePopup);
 	};
 
-	const onSelectItem = (item) => {
+	const onSelectItem = (item: SortBy): void => {
 		onClickSortType(item);
 		setVisiblePopup(false);
 	};
@@ -65,16 +74,5 @@ const Sort = React.memo(function Sort({ items, activeSortType, onClickSortType }
 		</div>
 	);
 });
-
-Sort.propTypes = {
-	items: PropTypes.arrayOf(object),
-	activeSortType: PropTypes.string,
-	onClickSortType: PropTypes.func.isRequired
-};
-
-Sort.defaultProps = {
-	items: [],
-	activeSortType: 'popular',
-};
 
 export default Sort;

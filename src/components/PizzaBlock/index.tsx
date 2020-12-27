@@ -1,22 +1,35 @@
 import React, { useState } from "react";
 import classNames from "classnames";
-import PropTypes from "prop-types";
+import { AddedPizza } from "../../redux/actions/types";
 
-function PizzaBlock({ id, imageUrl, name, types, sizes, price, onClickAddPizza, addedCount }) {
-	const availableNames = ["тонкое", "традиционное"];
-	const availableSizes = [26, 30, 40];
-	const [activeType, setActiveType] = useState(types[0]);
-	const [activeSize, setActiveSize] = useState(0);
+interface IPizzaBlock {
+   id: number 
+   imageUrl: string
+   name: string
+   types: any
+   sizes: any
+   price: number 
+   onClickAddPizza: (addedPizza: AddedPizza) => void
+   addedCount: number | null
+}
 
-	const onSelectType = (index) => {
+function PizzaBlock({ id, imageUrl, name, types, sizes, price, onClickAddPizza, addedCount }: IPizzaBlock) {
+   type AviableNames = Array<string>
+   const availableNames: AviableNames = ["тонкое", "традиционное"];
+   type AviableSizes = Array<number>
+	const availableSizes: AviableSizes = [26, 30, 40];
+	const [activeType, setActiveType] = useState<number>(types[0]);
+	const [activeSize, setActiveSize] = useState<number>(0);
+
+	const onSelectType = (index: number): void => {
 		setActiveType(index);
 	};
-	const onSelectSize = (size) => {
+	const onSelectSize = (size: number): void => {
 		setActiveSize(size);
 	};
 
 	const handleOnAddPizza = () => {
-		const obj = {
+		const addedPizza: AddedPizza = {
 			id,
 			name,
 			imageUrl,
@@ -24,7 +37,7 @@ function PizzaBlock({ id, imageUrl, name, types, sizes, price, onClickAddPizza, 
 			size: availableSizes[activeSize],
 			type: availableNames[activeType]
 		};
-		onClickAddPizza(obj);
+		onClickAddPizza(addedPizza);
 	};
 	return (
 		<div className='pizza-block'>
@@ -86,22 +99,5 @@ function PizzaBlock({ id, imageUrl, name, types, sizes, price, onClickAddPizza, 
 		</div>
 	);
 }
-
-PizzaBlock.propTypes = {
-	name: PropTypes.string,
-	imageUrl: PropTypes.string,
-	types: PropTypes.arrayOf(PropTypes.number),
-	sizes: PropTypes.arrayOf(PropTypes.number),
-	price: PropTypes.number,
-	addPizza: PropTypes.func,
-	addedCount: PropTypes.number
-};
-
-PizzaBlock.defaultProps = {
-	name: "Pizza",
-	types: [],
-	sizes: [],
-	price: 0,
-};
 
 export default PizzaBlock;
