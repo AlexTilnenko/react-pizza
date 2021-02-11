@@ -1,24 +1,22 @@
-import * as t from '../actions/types'
+import * as t from "../actions/types";
 
 type FiltersStateType = {
-   sortBy: {
-      type: string,
-      order: string
-   },
-	category: Category
-}
-
-export type Category = number | null
+	sortBy: {
+		type: string;
+		order: string;
+	};
+	category: number;
+};
 
 const initialState: FiltersStateType = {
 	sortBy: {
-      type: "popular",
-      order: 'desc'
+		type: "popular",
+		order: "desc"
 	},
-	category: null
+	category: 0
 };
 
-const filtersReducer = (state = initialState, action: any): FiltersStateType => {
+const filtersReducer = (state = initialState, action: t.FiltersActions): FiltersStateType => {
 	switch (action.type) {
 		case t.SET_CATEGORY:
 			return {
